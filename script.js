@@ -3,10 +3,13 @@ var clique = function clicar(evento){
 	indice_x=parseInt(this.id.split('_')[1])
 	indice_y=parseInt(this.id.split('_')[2])
 	if(evento.button == 0){
-		abrirBloco(indice_x, indice_y, true)
+		resultado = abrirBloco(indice_x, indice_y, true)
+		if (!resultado)
+			console.log('PERDEU!!')
 	}
 	else if (evento.button == 2) {
-		campo[indice_x][indice_y].bandeira = !campo[indice_x][indice_y].bandeira
+		if (!campo[indice_x][indice_y].aberto)
+			campo[indice_x][indice_y].bandeira = !campo[indice_x][indice_y].bandeira
 		atualizarImagens(indice_x, indice_y)
 	}
 }
@@ -83,11 +86,64 @@ function desenharCampo(){
 }
 
 function abrirBloco(indice_x, indice_y, flag){
+	if (campo[indice_x][indice_y].bandeira)
+		return 1
+
+	if (campo[indice_x][indice_y].aberto && !flag)
+		return 1
+
 	if (campo[indice_x][indice_y].bomba)
 		return 0
 
-	if (campo[indice_x][indice_y].aberto)
-		return 1
+	if (campo[indice_x][indice_y].numero == 0){
+		abrir(indice_x, indice_y)
+        if (indice_x != x-1 && indice_y != y-1)
+            abrirBloco(indice_x+1, indice_y+1, false)
+        if (indice_x != x-1 && indice_y != 0)
+            abrirBloco(indice_x+1, indice_y-1, false)
+        if (indice_x != 0 && indice_y != y-1)
+            abrirBloco(indice_x-1, indice_y+1, false)
+        if (indice_x != 0 && indice_y != 0)
+            abrirBloco(indice_x-1, indice_y-1, false)
+        if (indice_y != 0)
+            abrirBloco(indice_x, indice_y-1, false)
+        if (indice_y != y-1)
+            abrirBloco(indice_x, indice_y+1, false)
+        if (indice_x != x-1)
+            abrirBloco(indice_x+1, indice_y, false)
+        if (indice_x != 0)
+            abrirBloco(indice_x-1, indice_y, false)
+        return 1
+    }
+
+	if (campo[indice_x][indice_y].aberto){
+		var aux = 1
+		if (indice_x != x-1 && indice_y != y-1)
+            if (abrirBloco(indice_x+1, indice_y+1, false)==0)
+            	aux = 0
+        if (indice_x != x-1 && indice_y != 0)
+            if (abrirBloco(indice_x+1, indice_y-1, false)==0)
+            	aux = 0
+        if (indice_x != 0 && indice_y != y-1)
+            if (abrirBloco(indice_x-1, indice_y+1, false)==0)
+            	aux = 0
+        if (indice_x != 0 && indice_y != 0)
+            if (abrirBloco(indice_x-1, indice_y-1, false)==0)
+            	aux = 0
+        if (indice_y != 0)
+            if (abrirBloco(indice_x, indice_y-1, false)==0)
+            	aux = 0
+        if (indice_y != y-1)
+            if (abrirBloco(indice_x, indice_y+1, false)==0)
+            	aux = 0
+        if (indice_x != x-1)
+            if (abrirBloco(indice_x+1, indice_y, false)==0)
+            	aux = 0
+        if (indice_x != 0)
+            if (abrirBloco(indice_x-1, indice_y, false)==0)
+            	aux = 0
+    	return aux
+	}
 
 	if (abrir(indice_x, indice_y) == 0 && flag){
         if (indice_x != x-1 && indice_y != y-1)
@@ -108,6 +164,8 @@ function abrirBloco(indice_x, indice_y, flag){
             abrirBloco(indice_x-1, indice_y, true)
         return 1
     }
+
+    return 1
 }
 
 function abrir(indice_x, indice_y){
