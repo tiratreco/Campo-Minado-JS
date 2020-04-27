@@ -1,2 +1,3 @@
 # Campo-Minado-JS
-Campo Minado em JS e HTML
+
+Pequeno projeto em desenvolvimento para aprender HTML e JS
