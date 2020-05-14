@@ -2,12 +2,12 @@
 var clique = function clicar(evento){
 	indice_x=parseInt(this.id.split('_')[1])
 	indice_y=parseInt(this.id.split('_')[2])
-	if(evento.button == 0){
+	if(evento.button == 0){//open block
 		resultado = abrirBloco(indice_x, indice_y, true)
-		if (!resultado)
+		if (!resultado)//lose
 			console.log('PERDEU!!')
 	}
-	else if (evento.button == 2) {
+	else if (evento.button == 2) {//flag
 		if (!campo[indice_x][indice_y].aberto)
 			campo[indice_x][indice_y].bandeira = !campo[indice_x][indice_y].bandeira
 		atualizarImagens(indice_x, indice_y)
